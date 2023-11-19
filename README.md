@@ -1,7 +1,5 @@
 # Google Maps Marker CRUD App
 
-This project is a web application that allows you to create, read, update, and delete map markers using the Google Maps API.
-
 ## Introduction
 
 This web application is built using Laravel and the Google Maps API. It allows you to manage markers on a map, including creating new markers, viewing existing markers, updating marker details, and deleting markers.
