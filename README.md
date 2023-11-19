@@ -13,13 +13,13 @@ This web application is built using Laravel and the Google Maps API. It allows y
 - Edit the details of an existing marker.
 - Delete markers from the map.
 
-## Getting Started
+## Quick Start
 
-### Prerequisites
-
-Before you can use this application, you'll need the following:
-
-- PHP installed on your server.
-- Composer for managing PHP dependencies.
-- A Google Maps API key. You can obtain one by following the [Google Maps JavaScript API Documentation](https://developers.google.com/maps/gmp-get-started#enable-apis).
-
+## Quick Start
+- Clone the repository: `git clone https://github.com/LiisAlber/laravel-google-maps-API.git`
+- Navigate to the directory and install dependencies: `composer install`
+- Configure your `.env` file with your database details and Google Maps API key
+- Run database migrations: `php artisan migrate`
+- Start the Laravel server: `php artisan serve`
+- Access at `http://localhost:8000`
+- Navigate to the main page to interact with the Google Maps functionality.
