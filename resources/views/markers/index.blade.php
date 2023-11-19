@@ -19,37 +19,37 @@
 </head>
 <body class="bg-gray-100">
 
-<div class="flex flex-col md:flex-row h-screen">
+    <div class="flex flex-col md:flex-row h-screen">
     
-    <div id="map" class="flex-1"></div>
-
-    <div class="p-4 overflow-auto bg-white md:w-1/3 lg:w-1/4 h-full">
-        <h1 class="text-xl font-bold mb-4">Map Markers</h1>
-        <div class="space-y-2 mb-4">
-            @php $limitedMarkers = array_slice($markers->toArray(), -10); @endphp
-            @foreach($limitedMarkers as $marker)
-                <div class="flex items-center justify-between p-2 rounded shadow">
-                    <div>
-                        <div class="font-semibold">{{ $marker['name'] }}</div>
-                        <div class="text-sm text-gray-600">{{ $marker['description'] }}</div>
+        <div id="map" class="flex-1"></div>
+    
+        <div class="p-4 overflow-auto bg-white md:w-1/3 lg:w-1/4 h-full">
+            <h1 class="text-xl font-bold mb-4">Map Markers</h1>
+            <div class="space-y-2 mb-4">
+                @php $limitedMarkers = array_slice($markers->toArray(), -10); @endphp
+                @foreach($limitedMarkers as $marker)
+                    <div class="flex items-center justify-between p-2 rounded shadow">
+                        <div>
+                            <div class="font-semibold">{{ $marker['name'] }}</div>
+                            <div class="text-sm text-gray-600">{{ $marker['description'] }}</div>
+                        </div>
+                        <div class="flex space-x-1">
+                            <a href="{{ route('markers.edit', $marker['id']) }}" class="text-xs bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Edit</a>
+                            <form action="{{ route('markers.destroy', $marker['id']) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this marker?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-xs bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded">Delete</button>
+                            </form>
+                        </div>
                     </div>
-                    <div class="flex space-x-1">
-                        <a href="{{ route('markers.edit', $marker['id']) }}" class="text-xs bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Edit</a>
-                        <form action="{{ route('markers.destroy', $marker['id']) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-xs bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded">Delete</button>
-                        </form>
-                    </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
+            <a href="{{ route('markers.create') }}" class="text-center block bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded">
+                Add New Marker
+            </a>
         </div>
-        <a href="{{ route('markers.create') }}" class="text-center block bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded">
-            Add New Marker
-        </a>
+    
     </div>
-
-</div>
 
 <!-- Google Maps API -->
 <script>

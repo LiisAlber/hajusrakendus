@@ -60,7 +60,7 @@ class MarkerController extends Controller
     /**
      * Update the specified marker in storage.
      */
-    public function update(Request $request, Marker $marker)
+    public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
             'name' => 'required',
@@ -68,6 +68,11 @@ class MarkerController extends Controller
             'longitude' => 'required|numeric',
             'description' => 'nullable',
         ]);
+
+        $marker = Marker::find($id);
+        if (!$marker) {
+            return redirect()->back()->withErrors('Marker not found.');
+        }
 
         $marker->update($validatedData);
 
@@ -78,12 +83,16 @@ class MarkerController extends Controller
     /**
      * Remove the specified marker from storage.
      */
-    public function destroy(Marker $marker)
+    public function destroy($id)
     {
-        $marker->delete();
-
-        return redirect()->route('markers.index')
-                        ->with('success', 'Marker deleted successfully');
+        $marker = Marker::find($id);
+        if ($marker) {
+            $marker->delete();
+            return redirect()->route('markers.index')
+                            ->with('success', 'Marker deleted successfully');
+        } else {
+            return redirect()->back()->withErrors('Marker not found.');
+        }
     }
 }
 
