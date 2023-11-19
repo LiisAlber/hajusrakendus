@@ -11,7 +11,6 @@ This web application is built using Laravel and the Google Maps API. It allows y
 - Edit the details of an existing marker.
 - Delete markers from the map.
 
-## Quick Start
 
 ## Quick Start
 - Clone the repository: `git clone https://github.com/LiisAlber/laravel-google-maps-API.git`
