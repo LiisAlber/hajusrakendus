@@ -1,41 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Map Markers</title>
+    <!-- Include Tailwind CSS from CDN for quick setup -->
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
     <style>
         #map {
-            height: 400px; 
-            width: 100%;
+            height: calc(100vh - 4rem); /* Full height minus header or padding */
+        }
+        @media (max-width: 640px) {
+            #map {
+                height: calc(100vh - 2rem); /* Adjust for mobile */
+            }
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-100">
 
-<div class="container">
-    <h1>Map Markers</h1>
+<div class="flex flex-col md:flex-row h-screen">
+    
+    <div id="map" class="flex-1"></div>
 
-    <!-- Div to display the Google Map -->
-    <div id="map"></div>
-
-    <h2>Markers List</h2>
-    <ul>
-        @foreach($markers as $marker)
-            <li>
-                {{ $marker->name }} - {{ $marker->description }}
-                <!-- Edit Link -->
-                <a href="{{ route('edit', $marker->id) }}">Edit</a>
-                <!-- Delete Link -->
-                <form action="{{ route('destroy', $marker->id) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit">Delete</button>
-                </form>
-            </li>
-        @endforeach
-    </ul>
-
-    <!-- Link to Add New Marker -->
-    <a href="{{ route('markers.create') }}">Add New Marker</a>
+    <div class="p-4 overflow-auto bg-white md:w-1/3 lg:w-1/4 h-full">
+        <h1 class="text-xl font-bold mb-4">Map Markers</h1>
+        <div class="space-y-2 mb-4">
+            @php $limitedMarkers = array_slice($markers->toArray(), -10); @endphp
+            @foreach($limitedMarkers as $marker)
+                <div class="flex items-center justify-between p-2 rounded shadow">
+                    <div>
+                        <div class="font-semibold">{{ $marker['name'] }}</div>
+                        <div class="text-sm text-gray-600">{{ $marker['description'] }}</div>
+                    </div>
+                    <div class="flex space-x-1">
+                        <a href="{{ route('markers.edit', $marker['id']) }}" class="text-xs bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Edit</a>
+                        <form action="{{ route('markers.destroy', $marker['id']) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-xs bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <a href="{{ route('markers.create') }}" class="text-center block bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded">
+            Add New Marker
+        </a>
+    </div>
 
 </div>
 
@@ -76,39 +88,34 @@
 
         // Add map click event listener
         google.maps.event.addListener(map, 'click', function(event) {
-            // Show prompt to enter marker details
             const markerName = prompt("Enter marker name:", "");
             if (markerName) {
                 const markerDescription = prompt("Enter marker description:", "");
-                // Create marker on the map
                 const clickMarker = new google.maps.Marker({
                     position: event.latLng,
                     map: map,
                     title: markerName
                 });
 
-                // Prepare data to send to backend
                 const markerData = {
                     name: markerName,
                     latitude: event.latLng.lat(),
                     longitude: event.latLng.lng(),
                     description: markerDescription,
-                    _token: '{{ csrf_token() }}' // CSRF token for security
+                    _token: '{{ csrf_token() }}'
                 };
 
-                // Send data to backend via POST request
                 fetch('{{ route('markers.store') }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Ensure you have a valid CSRF token
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
                     body: JSON.stringify(markerData)
                 })
                 .then(response => response.json())
                 .then(data => {
                     console.log('Marker saved:', data);
-                    // Optionally update the UI to reflect the new marker
                 })
                 .catch(error => {
                     console.error('Error saving marker:', error);

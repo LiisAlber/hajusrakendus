@@ -1,5 +1,5 @@
 
-<form action="{{ route('update', $marker->id) }}" method="POST">
+<form action="{{ route('markers.update', $marker->id) }}" method="POST">
     @csrf
     @method('PUT')
     <input type="text" name="name" placeholder="Name" value="{{ $marker->name }}">

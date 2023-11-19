@@ -15,12 +15,11 @@ use App\Http\Controllers\MarkerController;
 |
 */
 
-Route::resource('markers', \App\Http\Controllers\MarkerController::class);
-
-Route::get('/markers', [\App\Http\Controllers\MarkerController::class, 'index'])->name('index');
-
-Route::get('/markers/{marker}/edit', [\App\Http\Controllers\MarkerController::class, 'edit'])->name('edit');
-
-Route::delete('/markers/{marker}', [\App\Http\Controllers\MarkerController::class, 'destroy'])->name('destroy');
+Route::get('/markers', [MarkerController::class, 'index'])->name('markers.index');
+Route::get('/markers/create', [MarkerController::class, 'create'])->name('markers.create');
+Route::post('/markers', [MarkerController::class, 'store'])->name('markers.store');
+Route::get('/markers/{id}/edit', [MarkerController::class, 'edit'])->name('markers.edit');
+Route::put('/markers/{id}', [MarkerController::class, 'update'])->name('markers.update');
+Route::delete('/markers/{id}', [MarkerController::class, 'destroy'])->name('markers.destroy');
 
 

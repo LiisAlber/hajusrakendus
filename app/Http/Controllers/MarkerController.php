@@ -38,16 +38,23 @@ class MarkerController extends Controller
 
         Marker::create($validatedData);
 
-        return redirect()->route('index')
-                        ->with('success', 'Marker created successfully.');
+        return redirect()->route('markers.index')
+                 ->with('success', 'Marker updated successfully');
+
     }
 
     /**
      * Show the form for editing the specified marker.
      */
-    public function edit(Marker $marker)
+    public function edit($id)
     {
-        return view('markers.edit');
+        $marker = Marker::find($id);
+        if ($marker) {
+            return view('markers.edit', ['marker' => $marker]);
+        } else {
+            // Handle the case where the marker doesn't exist
+            return redirect()->back()->withErrors('Marker not found.');
+        }
     }
 
     /**
@@ -64,7 +71,7 @@ class MarkerController extends Controller
 
         $marker->update($validatedData);
 
-        return redirect()->route('index')
+        return redirect()->route('markers.index')
                         ->with('success', 'Marker updated successfully');
     }
 
@@ -75,7 +82,7 @@ class MarkerController extends Controller
     {
         $marker->delete();
 
-        return redirect()->route('index')
+        return redirect()->route('markers.index')
                         ->with('success', 'Marker deleted successfully');
     }
 }
