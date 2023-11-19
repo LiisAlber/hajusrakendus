@@ -17,6 +17,10 @@ use App\Http\Controllers\MarkerController;
 
 Route::resource('markers', \App\Http\Controllers\MarkerController::class);
 
-Route::name('markers.create')->get('/markers/create', 'MarkerController@create');
+Route::get('/markers', [\App\Http\Controllers\MarkerController::class, 'index'])->name('index');
+
+Route::get('/markers/{marker}/edit', [\App\Http\Controllers\MarkerController::class, 'edit'])->name('edit');
+
+Route::delete('/markers/{marker}', [\App\Http\Controllers\MarkerController::class, 'destroy'])->name('destroy');
 
 

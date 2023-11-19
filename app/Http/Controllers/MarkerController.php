@@ -13,7 +13,7 @@ class MarkerController extends Controller
     public function index()
     {
         $markers = Marker::all();
-        return view('index', compact('markers'));
+        return view('markers.index', compact('markers'));
     }
 
     /**
@@ -21,7 +21,7 @@ class MarkerController extends Controller
      */
     public function create()
     {
-        return view('create');
+        return view('markers.create');
     }
 
     /**
@@ -47,7 +47,7 @@ class MarkerController extends Controller
      */
     public function edit(Marker $marker)
     {
-        return view('edit');
+        return view('markers.edit');
     }
 
     /**
