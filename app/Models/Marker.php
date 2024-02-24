@@ -11,4 +11,3 @@ class Marker extends Model
 
     protected $fillable = ['name', 'latitude', 'longitude', 'description'];
 }
-

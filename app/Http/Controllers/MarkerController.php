@@ -95,4 +95,3 @@ class MarkerController extends Controller
         }
     }
 }
-
