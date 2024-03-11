@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MarkerController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
@@ -17,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/weather', [WeatherController::class, 'getWeather']);
+Route::get('/weather', [WeatherController::class, 'getWeather'])->name('weather');
 
 Route::get('/markers', [MarkerController::class, 'index'])->name('markers.index');
 Route::get('/markers/create', [MarkerController::class, 'create'])->name('markers.create');
@@ -44,10 +47,30 @@ Route::resource('/blog', BlogController::class)->middleware('auth');
 Route::post('/comments', [CommentController::class, 'store'])->name('comments.store')->middleware('auth');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy')->middleware('auth');
 
+// Display all products
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
-Route::get('/test', function () {
-    return view('layouts.app');
-});
+// Display the shopping cart
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+
+// Add an item to the cart
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+
+// Remove an item from the cart
+Route::delete('/cart/remove/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+
+Route::patch('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+
+Route::post('/payment/process', [PaymentController::class, 'process'])->name('payment.process');
+
+Route::get('/payment', function () {
+    return view('products.payment');
+})->name('payment');
+
+
+Route::get('/confirmation', function () {
+    return view('products.confirmation');
+})->name('confirmation');
 
 
 require __DIR__.'/auth.php';
