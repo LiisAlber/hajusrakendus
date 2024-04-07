@@ -108,9 +108,9 @@
                 </x-responsive-nav-link>
             </form>
         </div>
-    @else <!-- If no user is authenticated, you might want to show login/register links -->
+    @else
         <div class="px-4">
-            <div class="font-medium text-base text-gray-800 dark:text-gray-200">Guest</div> <!-- Optionally show 'Guest' or remove this line -->
+            <div class="font-medium text-base text-gray-800 dark:text-gray-200">Guest</div>
         </div>
         <div class="mt-3 space-y-1">
             <x-responsive-nav-link :href="route('login')">
