@@ -9,7 +9,7 @@ class PaymentController extends Controller
     public function process(Request $request)
     {
         // Simulate a payment outcome
-        $paymentSuccessful = rand(0, 1) == 1; 
+        $paymentSuccessful = rand(0, 1) == 1;
 
         if ($paymentSuccessful) {
             // If payment is successful, clear the cart
@@ -23,5 +23,4 @@ class PaymentController extends Controller
             return back()->withErrors('Payment failed, please try again.');
         }
     }
-
 }

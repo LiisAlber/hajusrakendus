@@ -10,6 +10,7 @@ class BlogController extends Controller
     public function index()
     {
         $blogs = Blog::latest()->paginate();
+
         return view('blog.index', compact('blogs'));
     }
 
@@ -26,6 +27,7 @@ class BlogController extends Controller
         ]);
 
         Blog::create($validated);
+
         return redirect()->route('blog.index')->with('success', 'Blog post created successfully.');
     }
 
@@ -47,17 +49,18 @@ class BlogController extends Controller
         ]);
 
         $blog->update($validated);
+
         return redirect()->route('blog.index')->with('success', 'Blog post updated successfully.');
     }
 
     public function destroy(Blog $blog)
     {
-        if (!auth()->user()->is_admin) {
+        if (! auth()->user()->is_admin) {
             return redirect()->route('blog.index')->with('error', 'Unauthorized to perform this action.');
         }
 
         $blog->delete();
+
         return redirect()->route('blog.index')->with('success', 'Blog post deleted successfully.');
     }
-
 }

@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment;
 use App\Models\Blog;
-use App\Models\User;
-use Illuminate\Http\RedirectResponse;
+use App\Models\Comment;
 use Illuminate\Http\Request;
-
 
 class CommentController extends Controller
 {
@@ -16,7 +13,8 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::with('blog')->latest()->paginate(10); 
+        $comments = Comment::with('blog')->latest()->paginate(10);
+
         return view('comments.index', compact('comments'));
     }
 
@@ -26,12 +24,12 @@ class CommentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'blog_id' => 'required|exists:blogs,id', 
+            'blog_id' => 'required|exists:blogs,id',
             'content' => 'required|string',
         ]);
 
         Comment::create([
-            'blog_id' => $request->blog_id, 
+            'blog_id' => $request->blog_id,
             'user_id' => auth()->id(),
             'content' => $request->content,
         ]);
@@ -39,14 +37,13 @@ class CommentController extends Controller
         return back()->with('success', 'Comment added successfully.');
     }
 
-
     /**
      * Display the specified resource.
      */
     public function show(Blog $blog)
     {
         // Loading comments for a specific blog post
-        $comments = $blog->comments()->with('user')->get(); 
+        $comments = $blog->comments()->with('user')->get();
 
         return view('blog.show', compact('blog', 'comments'));
     }
@@ -56,11 +53,12 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        if (!auth()->user()->isAdmin()) {
+        if (! auth()->user()->isAdmin()) {
             return back()->with('error', 'You do not have permission to do this.');
         }
 
         $comment->delete();
+
         return back()->with('success', 'Comment deleted successfully.');
     }
 }

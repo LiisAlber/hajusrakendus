@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
@@ -13,15 +13,15 @@ class CartController extends Controller
         $cart = session()->get('cart', []);
 
         // check if the product is already in the cart
-        if(isset($cart[$product->id])) {
+        if (isset($cart[$product->id])) {
             // if it is, increment the quantity
             $cart[$product->id]['quantity'] += $request->input('quantity');
         } else {
             // if not, add the product to the cart with the specified quantity
             $cart[$product->id] = [
-                "name" => $product->name,
-                "price" => $product->price,
-                "quantity" => $request->input('quantity'),
+                'name' => $product->name,
+                'price' => $product->price,
+                'quantity' => $request->input('quantity'),
             ];
         }
 
@@ -36,14 +36,13 @@ class CartController extends Controller
     {
         $cart = session()->get('cart');
 
-        if(isset($cart[$id])) {
+        if (isset($cart[$id])) {
             unset($cart[$id]);
             session()->put('cart', $cart);
         }
 
         return redirect()->route('cart.index')->with('success', 'Product removed successfully.');
     }
-
 
     public function index()
     {
@@ -59,19 +58,17 @@ class CartController extends Controller
         return view('products.cart', compact('totalAmount'));
     }
 
-
     public function update(Request $request, $id)
     {
         $cart = session()->get('cart');
-        
-        if(isset($cart[$id])) {
+
+        if (isset($cart[$id])) {
             $cart[$id]['quantity'] = $request->quantity;
             session()->put('cart', $cart);
+
             return redirect()->route('cart.index')->with('success', 'Cart updated successfully.');
         }
 
         return redirect()->route('cart.index')->with('error', 'Item not found in cart.');
     }
-
-
 }

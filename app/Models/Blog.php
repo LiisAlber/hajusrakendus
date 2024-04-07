@@ -12,16 +12,17 @@ class Blog extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',       
-        'description', 
+        'title',
+        'description',
     ];
 
-    public function user(): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function comments(): HasMany {
+    public function comments(): HasMany
+    {
         return $this->hasMany(Comment::class);
     }
 }
-

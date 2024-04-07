@@ -67,10 +67,8 @@ Route::get('/payment', function () {
     return view('products.payment');
 })->name('payment');
 
-
 Route::get('/confirmation', function () {
     return view('products.confirmation');
 })->name('confirmation');
-
 
 require __DIR__.'/auth.php';
