@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\Tools;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,4 +18,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('tools', function(){
+    if ($limit = request('limit')) {
+        return Cache::remember('my-request'.$limit, now()->addHour(), fn () => Tools::paginate($limit));
+    }
+    return Tools::all();
 });

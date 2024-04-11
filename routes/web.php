@@ -7,7 +7,9 @@ use App\Http\Controllers\MarkerController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ToolsController;
 use App\Http\Controllers\WeatherController;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -70,5 +72,34 @@ Route::get('/payment', function () {
 Route::get('/confirmation', function () {
     return view('products.confirmation');
 })->name('confirmation');
+
+// Display a list of all tools
+Route::get('/tools', [ToolsController::class, 'index'])->name('tools.index');
+
+// Display the form for creating a new tool
+Route::get('/tools/create', [ToolsController::class, 'create'])->name('tools.create');
+
+// Store a newly created tool
+Route::post('/tools', [ToolsController::class, 'store'])->name('tools.store');
+
+// Display the form for editing the specified tool
+Route::get('/tools/{tool}/edit', [ToolsController::class, 'edit'])->name('tools.edit');
+
+// Update the specified tool
+Route::put('/tools/{tool}', [ToolsController::class, 'update'])->name('tools.update');
+
+// Delete the specified tool
+Route::delete('/tools/{tool}', [ToolsController::class, 'destroy'])->name('tools.destroy');
+
+Route::get('show-api', function(){
+    $requestUrl = match(request('name')) {
+        'Ralf' => 'https://hajus.ta19heinsoo.itmajakas.ee/api/movies',
+        default => 'https://hajusrakendus.ta22alber.itmajakas.ee/tools'
+    };
+    return Http::get($requestUrl, [
+        'limit' => request('limit')
+    ]);
+});
+
 
 require __DIR__.'/auth.php';
