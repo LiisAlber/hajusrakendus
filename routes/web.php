@@ -91,14 +91,15 @@ Route::put('/tools/{tool}', [ToolsController::class, 'update'])->name('tools.upd
 // Delete the specified tool
 Route::delete('/tools/{tool}', [ToolsController::class, 'destroy'])->name('tools.destroy');
 
-Route::get('show-api', function(){
+Route::get('show-api', function() {
     $requestUrl = match(request('name')) {
         'Ralf' => 'https://hajus.ta19heinsoo.itmajakas.ee/api/movies',
         default => 'https://hajusrakendus.ta22alber.itmajakas.ee/tools'
     };
+
     return Http::get($requestUrl, [
         'limit' => request('limit')
-    ]);
+    ])->body();
 });
 
 

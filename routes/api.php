@@ -20,7 +20,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('tools', function(){
+Route::get('tools', function(Request $request){
+    dd(request());
     if ($limit = request('limit')) {
         return Cache::remember('my-request'.$limit, now()->addHour(), fn () => Tools::paginate($limit));
     }
