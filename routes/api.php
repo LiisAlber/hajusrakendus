@@ -21,9 +21,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('tools', function(Request $request){
-    dd(request());
-    if ($limit = request('limit')) {
-        return Cache::remember('my-request'.$limit, now()->addHour(), fn () => Tools::paginate($limit));
-    }
-    return Tools::all();
+    $limit = $request->input('limit');
+    $cacheKey = 'tools-limit-' . ($limit ?? 'no-limit');
+    return Cache::remember($cacheKey, now()->addHour(), function () use ($limit) {
+        return Tools::paginate($limit ?? 2); 
+    });
 });
+

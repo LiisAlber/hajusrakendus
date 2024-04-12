@@ -104,3 +104,5 @@ Route::get('show-api', function() {
 
 
 require __DIR__.'/auth.php';
+
+// show-api?name=Ralf&limit=2
