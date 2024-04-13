@@ -30,23 +30,15 @@ class ToolsController extends Controller
      */
     public function store(Request $request)
     {
-    
         $validatedData = $request->validate([
             'title' => 'required|max:255',
+            'description' => 'required',
             'brand' => 'required|max:255',
             'price' => 'required|numeric',
-            'image' => 'nullable|image|max:2048', 
+            'image' => 'nullable|url' 
         ]);
 
-    
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('public/tools');
-            $validatedData['image'] = $path;
-        }
-
-        $tool = Tools::create($validatedData);
-
-    
+        Tools::create($validatedData);
         return redirect()->route('tools.index');
     }
 
@@ -54,7 +46,7 @@ class ToolsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Tools $tools)
+    public function show(Tools $tool)
     {
         return view('tools.show', compact('tools'));
     }
@@ -62,44 +54,38 @@ class ToolsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Tools $tools)
+    public function edit(Tools $tool)
     {
-        return view('tools.edit', compact('tools'));
+        return view('tools.edit', compact('tool'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tools $tools)
+    public function update(Request $request, Tools $tool)
 {
     $validatedData = $request->validate([
         'title' => 'required|max:255',
+        'description' => 'required',
         'brand' => 'required|max:255',
         'price' => 'required|numeric',
-        'image' => 'nullable|image|max:2048',
+        'image' => 'nullable|url'
     ]);
 
-    if ($request->hasFile('image')) {
-        // Delete the old image if it exists and it's not a default image
-        if ($tools->image && !str_contains($tools->image, 'default-image.png')) {
-            Storage::delete($tools->image);
-        }
+    // Update the tool with validated data.
+    $tool->update($validatedData);
 
-        $path = $request->file('image')->store('public/tools');
-        $validatedData['image'] = $path;
-    }
+    return redirect()->route('tools.index')->with('success', 'Tool updated successfully');
 
-    $tools->update($validatedData);
-
-    return redirect()->route('tools.index');
 }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Tools $tools)
+    public function destroy(Tools $tool)
     {
-        $tools->delete();
+        $tool->delete();
         return redirect()->route('tools.index');
     }
 }

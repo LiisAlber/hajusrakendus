@@ -11,6 +11,7 @@ use App\Http\Controllers\ToolsController;
 use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,12 +98,31 @@ Route::get('show-api', function() {
         default => 'https://hajusrakendus.ta22alber.itmajakas.ee/tools'
     };
 
-    return Http::get($requestUrl, [
-        'limit' => request('limit')
-    ])->body();
-});
+    // Fetching the full response from the API
+    $response = Http::get($requestUrl)->json();
 
+    // Limit the data array based on the 'limit' request parameter
+    $limit = request('limit', 10); // Default to 10 if no limit is provided
+    $limitedData = array_slice($response['data'], 0, $limit);
+
+    // Return the modified response with limited data
+    return [
+        'time' => $response['time'],
+        'data' => $limitedData
+    ];
+});
 
 require __DIR__.'/auth.php';
 
 // show-api?name=Ralf&limit=2
+
+/*Route::get('show-api', function() {
+    $requestUrl = match(request('name')) {
+        'Ralf' => 'https://hajus.ta19heinsoo.itmajakas.ee/api/movies',
+        default => 'https://hajusrakendus.ta22alber.itmajakas.ee/tools'
+    };
+
+    return Http::get($requestUrl, [
+        'limit' => request('limit')
+    ])->body();
+});*/

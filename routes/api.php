@@ -21,10 +21,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('tools', function(Request $request){
-    $limit = $request->input('limit');
-    $cacheKey = 'tools-limit-' . ($limit ?? 'no-limit');
-    return Cache::remember($cacheKey, now()->addHour(), function () use ($limit) {
-        return Tools::paginate($limit ?? 2); 
-    });
+
+    if ($limit = request('limit')) {
+        return Cache::remember('my-request'.$limit, now()->addHour(), fn () => Tools::paginate($limit));
+    }
+    return Tools::all();
 });
 
+/*if ($limit = $request->input('limit')) {
+    $validatedLimit = (int) $limit;  // Cast to integer to avoid potential SQL injection or errors
+    if ($validatedLimit <= 0) {
+        return response()->json(['error' => 'Limit must be a positive integer'], 400);
+    }
+    return Cache::remember('my-request' . $validatedLimit, now()->addHour(), fn () => Tools::paginate($validatedLimit));
+}
+*/
