@@ -11,7 +11,7 @@
 
         <a href="{{ route('tools.create') }}" class="btn btn-primary">Add New Tool</a>
         <button id="fetchApiData" class="btn btn-info">Ralf
-            
+
         </button>
         <div id="apiData" class="mt-3"></div>
 
@@ -54,14 +54,14 @@ document.getElementById('fetchApiData').addEventListener('click', function() {
         .then(response => response.json())
         .then(data => {
             const container = document.getElementById('apiData');
-            container.innerHTML = ''; // Clear previous results
+            container.innerHTML = ''; 
             data.data.forEach(tool => {
                 container.innerHTML += `<div>
                     <h4>${tool.title}</h4>
                     <p>Brand: ${tool.brand}</p>
                     <p>Price: ${tool.price}</p>
                     <img src="${tool.image}" alt="${tool.title} Image" style="width:100px;">
-                </div>`; // Display each tool
+                </div>`; 
             });
         })
         .catch(error => console.error('Error fetching the data:', error));
