@@ -10,8 +10,8 @@
         @endif
 
         <a href="{{ route('tools.create') }}" class="btn btn-primary">Add New Tool</a>
-        <button class="btn btn-info fetchApiData" data-name="Ralf">Ralf</button>
-        <button class="btn btn-info fetchApiData" data-name="OtherStudent">Nimi</button>
+        <button class="btn btn-info fetchApiData" data-name="Karel">Karel</button>
+        <button class="btn btn-info fetchApiData" data-name="Mari-Liis">Mari-Liis</button>
         <div id="apiData" class="mt-3"></div>
 
         <table class="table">

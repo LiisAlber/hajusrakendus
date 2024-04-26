@@ -94,23 +94,29 @@ Route::delete('/tools/{tool}', [ToolsController::class, 'destroy'])->name('tools
 
 Route::get('show-api', function() {
     $requestUrl = match(request('name')) {
-        'Ralf' => 'https://hajus.ta19heinsoo.itmajakas.ee/api/movies',
+        'Karel' => 'https://hajusrakendus.ta22maarma.itmajakas.ee/api/records',
+        'Mari-Liis' => 'https://ralf.ta22sink.itmajakas.ee/api/makeup',
         default => 'https://hajusrakendus.ta22alber.itmajakas.ee/tools'
     };
 
-    // Fetching the full response from the API
     $response = Http::get($requestUrl)->json();
+
+    // Check if the response is an array
+    if (!is_array($response)) {
+        // Handle unexpected response format
+        Log::warning('Unexpected response format from API: ' . $requestUrl);
+        return response()->json(['error' => 'Unexpected response format'], 500);
+    }
 
     // Limit the data array based on the 'limit' request parameter
     $limit = request('limit', 10); // Default to 10 if no limit is provided
-    $limitedData = array_slice($response['data'], 0, $limit);
+    $limitedData = array_slice($response, 0, $limit);
 
-    // Return the modified response with limited data
     return [
-        'time' => $response['time'],
         'data' => $limitedData
     ];
 });
+
 
 require __DIR__.'/auth.php';
 
