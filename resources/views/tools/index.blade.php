@@ -10,9 +10,8 @@
         @endif
 
         <a href="{{ route('tools.create') }}" class="btn btn-primary">Add New Tool</a>
-        <button id="fetchApiData" class="btn btn-info">Ralf
-
-        </button>
+        <button class="btn btn-info fetchApiData" data-name="Ralf">Ralf</button>
+        <button class="btn btn-info fetchApiData" data-name="OtherStudent">Nimi</button>
         <div id="apiData" class="mt-3"></div>
 
         <table class="table">
@@ -37,7 +36,7 @@
                             <form action="{{ route('tools.destroy', $tool) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger"style="background-color: #dc3545; color: white; border: none;">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -49,22 +48,42 @@
 
 @section('scripts')
 <script>
-document.getElementById('fetchApiData').addEventListener('click', function() {
-    fetch("{{ url('/show-api') }}?name=Ralf")
-        .then(response => response.json())
-        .then(data => {
-            const container = document.getElementById('apiData');
-            container.innerHTML = ''; 
-            data.data.forEach(tool => {
-                container.innerHTML += `<div>
-                    <h4>${tool.title}</h4>
-                    <p>Brand: ${tool.brand}</p>
-                    <p>Price: ${tool.price}</p>
-                    <img src="${tool.image}" alt="${tool.title} Image" style="width:100px;">
-                </div>`; 
-            });
-        })
-        .catch(error => console.error('Error fetching the data:', error));
+let lastClicked = null; 
+
+document.querySelectorAll('.fetchApiData').forEach(button => {
+    button.addEventListener('click', function() {
+        const currentName = this.getAttribute('data-name');
+        
+        const container = document.getElementById('apiData');
+        
+        if (lastClicked === currentName && container.style.display !== 'none') {
+            container.style.display = 'none';
+            lastClicked = null; 
+        } else {
+            container.style.display = 'block'; 
+            lastClicked = currentName; 
+
+            fetch(`{{ url('/show-api') }}?name=` + currentName)
+                .then(response => response.json())
+                .then(data => {
+                    container.innerHTML = '';
+                    data.data.forEach(tool => {
+                        container.innerHTML += `<div>
+                            <h4>${tool.title}</h4>
+                            <p>Brand: ${tool.brand}</p>
+                            <p>Price: ${tool.price}</p>
+                            <img src="${tool.image}" alt="${tool.title} Image" style="width:100px;">
+                        </div>`; 
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching the data:', error);
+                    container.innerHTML = '<p>Error loading data.</p>'; 
+                });
+        }
+    });
 });
 </script>
 @endsection
+
+
