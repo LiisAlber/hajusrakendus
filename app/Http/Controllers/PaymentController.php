@@ -26,6 +26,7 @@ class PaymentController extends Controller
             } else {
                 return back()->withErrors('Payment failed, please try again.');
             }
+            
         } catch (\Exception $e) {
             return back()->withErrors('Error: ' . $e->getMessage());
         }
