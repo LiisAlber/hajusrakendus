@@ -1,45 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Information</title>
 </head>
-<body>
-    @if (isset($weatherData))
-    @php
-        date_default_timezone_set('Europe/Tallinn');
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+    <div class="container mx-auto px-4">
+        <div class="my-5 p-5 bg-white shadow rounded-lg">
+            <form method="GET" action="{{ route('weather.get') }}" class="mb-4">
+                <input type="text" name="city" placeholder="Enter City Name" class="p-2 border border-gray-300 rounded">
+                <button type="submit" class="p-2 bg-blue-500 text-white rounded">Get Weather</button>
+            </form>
 
-        $sunrise = \Carbon\Carbon::createFromTimestamp($weatherData['sys']['sunrise'], 'UTC');
-        $sunset = \Carbon\Carbon::createFromTimestamp($weatherData['sys']['sunset'], 'UTC');
+            @if (isset($weatherData))
+            @php
+                date_default_timezone_set('Europe/Tallinn');
+                $sunrise = \Carbon\Carbon::createFromTimestamp($weatherData['sys']['sunrise'], 'UTC');
+                $sunset = \Carbon\Carbon::createFromTimestamp($weatherData['sys']['sunset'], 'UTC');
+                $sunrise->setTimezone('Europe/Tallinn');
+                $sunset->setTimezone('Europe/Tallinn');
+            @endphp
 
-        $sunrise->setTimezone('Europe/Tallinn');
-        $sunset->setTimezone('Europe/Tallinn');
-    @endphp
-
-
-        <h1>Weather in {{ $weatherData['name'] }}</h1>
-        @if (isset($weatherData['weather'][0]['icon']))
-            <img src="http://openweathermap.org/img/wn/{{ $weatherData['weather'][0]['icon'] }}.png" alt="Weather Icon">
-        @endif
-        <p>Temperature: {{ $weatherData['main']['temp'] }}°C</p>
-        <p>Feels Like: {{ $weatherData['main']['feels_like'] }}°C</p>
-        <p>Weather: {{ $weatherData['weather'][0]['main'] }} ({{ $weatherData['weather'][0]['description'] }})</p>
-        <p>Humidity: {{ $weatherData['main']['humidity'] }}%</p>
-        <p>Wind Speed: {{ $weatherData['wind']['speed'] }} meter/sec</p>
-        <p>Visibility: {{ $weatherData['visibility'] / 1000 }} km</p>
-        <p>Cloudiness: {{ $weatherData['clouds']['all'] }}%</p>
-        @if(isset($weatherData['rain']['1h']))
-            <p>Rain (Last 1 hr): {{ $weatherData['rain']['1h'] }} mm</p>
-        @endif
-        @if(isset($weatherData['snow']['1h']))
-            <p>Snow (Last 1 hr): {{ $weatherData['snow']['1h'] }} mm</p>
-        @endif
-        <p>Sunrise: {{ date('H:i', $weatherData['sys']['sunrise']) }}</p>
-        <p>Sunset: {{ date('H:i', $weatherData['sys']['sunset']) }}</p>
-    @else
-        <h1>Oops! Something went wrong.</h1>
-    @endif
+        <div class="my-5 p-5 bg-white shadow rounded-lg">
+            <h1 class="text-2xl font-bold text-center text-gray-700 mb-2">Weather in {{ $weatherData['name'] }}</h1>
+            @if (isset($weatherData['weather'][0]['icon']))
+                <div class="flex justify-center">
+                    <img src="http://openweathermap.org/img/wn/{{ $weatherData['weather'][0]['icon'] }}.png" alt="Weather Icon" class="w-20 h-20">
+                </div>
+            @endif
+            <p class="text-gray-600">Temperature: <span class="font-semibold">{{ $weatherData['main']['temp'] }}°C</span></p>
+            <p class="text-gray-600">Feels Like: <span class="font-semibold">{{ $weatherData['main']['feels_like'] }}°C</span></p>
+            <p class="text-gray-600">Weather: <span class="font-semibold">{{ $weatherData['weather'][0]['main'] }} ({{ $weatherData['weather'][0]['description'] }})</span></p>
+            <p class="text-gray-600">Humidity: <span class="font-semibold">{{ $weatherData['main']['humidity'] }}%</span></p>
+            <p class="text-gray-600">Wind Speed: <span class="font-semibold">{{ $weatherData['wind']['speed'] }} m/s</span></p>
+            <p class="text-gray-600">Visibility: <span class="font-semibold">{{ $weatherData['visibility'] / 1000 }} km</span></p>
+            <p class="text-gray-600">Cloudiness: <span class="font-semibold">{{ $weatherData['clouds']['all'] }}%</span></p>
+            @if(isset($weatherData['rain']['1h']))
+                <p class="text-gray-600">Rain (Last 1 hr): <span class="font-semibold">{{ $weatherData['rain']['1h'] }} mm</span></p>
+            @endif
+            @if(isset($weatherData['snow']['1h']))
+                <p class="text-gray-600">Snow (Last 1 hr): <span class="font-semibold">{{ $weatherData['snow']['1h'] }} mm</span></p>
+            @endif
+            <p class="text-gray-600">Sunrise: <span class="font-semibold">{{ $sunrise->format('H:i') }}</span></p>
+            <p class="text-gray-600">Sunset: <span class="font-semibold">{{ $sunset->format('H:i') }}</span></p>
+        </div>
+        @else
+                <h1 class="text-xl font-bold text-center text-red-500">Please enter a city name.</h1>
+            @endif
+        </div>
+    </div>
 </body>
 </html>
-
-
-

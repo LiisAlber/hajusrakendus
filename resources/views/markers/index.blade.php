@@ -4,15 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Map Markers</title>
-    <!-- Include Tailwind CSS from CDN for quick setup -->
-    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+   
     <style>
         #map {
-            height: calc(100vh - 4rem); /* Full height minus header or padding */
+            height: calc(100vh - 4rem); 
         }
         @media (max-width: 640px) {
             #map {
-                height: calc(100vh - 2rem); /* Adjust for mobile */
+                height: calc(100vh - 2rem); 
             }
         }
     </style>

@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Log;
 |
 */
 Route::get('/weather', [WeatherController::class, 'getWeather'])->name('weather');
+Route::get('/weather', [WeatherController::class, 'getWeather'])->name('weather.get');
+
 
 Route::get('/markers', [MarkerController::class, 'index'])->name('markers.index');
 Route::get('/markers/create', [MarkerController::class, 'create'])->name('markers.create');
@@ -32,11 +34,8 @@ Route::get('/markers/{id}/edit', [MarkerController::class, 'edit'])->name('marke
 Route::put('/markers/{id}', [MarkerController::class, 'update'])->name('markers.update');
 Route::delete('/markers/{id}', [MarkerController::class, 'destroy'])->name('markers.destroy');
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/dashboard', function () {
+Route::get('/', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -109,7 +108,7 @@ Route::get('show-api', function() {
     }
 
     // Limit the data array based on the 'limit' request parameter
-    $limit = request('limit', 10); // Default to 10 if no limit is provided
+    $limit = request('limit', 10); // Default to 10 
     $limitedData = array_slice($response, 0, $limit);
 
     return [

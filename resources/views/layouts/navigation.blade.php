@@ -18,7 +18,7 @@
                     <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.index')">
                         {{ __('E-Store') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('weather')" :active="request()->routeIs('weather')">
+                    <x-nav-link :href="route('weather.get')" :active="request()->routeIs('weather')">
                         {{ __('Weather') }}
                     </x-nav-link>
                     <x-nav-link :href="route('markers.index')" :active="request()->routeIs('markers.index')">

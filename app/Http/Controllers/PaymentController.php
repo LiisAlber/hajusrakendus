@@ -3,24 +3,31 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Stripe\Stripe;
+use Stripe\Charge;
 
 class PaymentController extends Controller
 {
     public function process(Request $request)
     {
-        // Simulate a payment outcome
-        $paymentSuccessful = rand(0, 1) == 1;
+        Stripe::setApiKey(config('services.stripe.secret'));
 
-        if ($paymentSuccessful) {
-            // If payment is successful, clear the cart
-            session()->forget('cart');
+        try {
+            $charge = Charge::create([
+                'amount' => 1000, 
+                'currency' => 'eur',
+                'source' => $request->stripeToken, 
+                'description' => 'Payment Description',
+            ]);
 
-            // Redirect to a confirmation page with a success message
-            return redirect()->route('confirmation')->with('success', 'Payment processed successfully!');
-        } else {
-            // If payment fails, do not clear the cart
-            // Redirect back to the payment page with an error message
-            return back()->withErrors('Payment failed, please try again.');
+            if ($charge->paid) {
+                session()->forget('cart');
+                return redirect()->route('confirmation')->with('success', 'Payment processed successfully!');
+            } else {
+                return back()->withErrors('Payment failed, please try again.');
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors('Error: ' . $e->getMessage());
         }
     }
 }
