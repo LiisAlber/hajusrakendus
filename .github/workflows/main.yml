@@ -19,8 +19,12 @@ jobs:
       - name: Install dependencies
         run: composer install
 
-      - name: Set API Key
-        run: echo "API_KEY=${{ secrets.OPENWEATHERMAP_API_KEY }}" >> $GITHUB_ENV
+      - name: Set Environment Variables
+        run: |
+          echo "OPENWEATHERMAP_API_KEY=${{ secrets.OPENWEATHERMAP_API_KEY }}" >> $GITHUB_ENV
+          echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" >> $GITHUB_ENV
+          echo "STRIPE_KEY=${{ secrets.STRIPE_KEY }}" >> $GITHUB_ENV
+          echo "STRIPE_PUBLIC=${{ secrets.STRIPE_PUBLIC }}" >> $GITHUB_ENV
 
       - name: Deploy
         uses: deployphp/action@v1
