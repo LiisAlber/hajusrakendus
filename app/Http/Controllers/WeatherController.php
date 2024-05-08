@@ -28,7 +28,7 @@ class WeatherController extends Controller
             $weatherData = $response->json();
             Cache::put($cacheKey, $weatherData, now()->addHour());
         } else {
-            
+
             Log::error('Failed to fetch weather data from the API. Response: '.$response->body());
             $errorDetails = [
                 'message' => 'Failed to fetch weather data.',
@@ -38,7 +38,6 @@ class WeatherController extends Controller
             return view('weather.error', compact('errorDetails'));
         }
     }
-
 
     return view('weather.weather', compact('weatherData'));
 }
