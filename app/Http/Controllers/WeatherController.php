@@ -13,7 +13,7 @@ class WeatherController extends Controller
 {
     $apiKey = env('OPENWEATHERMAP_API_KEY');
 
-    $cityName = $request->input('city', 'Kuressaare'); // Default to 'Kuressaare' if no city is provided
+    $cityName = $request->input('city', 'Kuressaare'); 
 
     $apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$apiKey&units=metric";
 
@@ -34,7 +34,7 @@ class WeatherController extends Controller
                 'details' => $response->json() ?? 'No additional information available.',
             ];
 
-            return view('error', compact('errorDetails'));
+            return view('weather.error', compact('errorDetails'));
         }
     }
 
