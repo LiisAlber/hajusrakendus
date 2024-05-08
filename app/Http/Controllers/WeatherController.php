@@ -38,6 +38,7 @@ class WeatherController extends Controller
         }
     }
 
+    
     return view('weather.weather', compact('weatherData'));
 }
 
