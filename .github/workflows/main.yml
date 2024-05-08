@@ -2,8 +2,6 @@ name: deploy
 
 on: push
 
-# It is important to specify "concurrency" for the workflow,
-# to prevent concurrency between different deploys.
 concurrency: production_environment
 
 jobs:
@@ -20,6 +18,9 @@ jobs:
 
       - name: Install dependencies
         run: composer install
+
+      - name: Set API Key
+        run: echo "API_KEY=${{ secrets.OPENWEATHERMAP_API_KEY }}" >> $GITHUB_ENV
 
       - name: Deploy
         uses: deployphp/action@v1

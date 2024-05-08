@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Log;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/weather', [WeatherController::class, 'getWeather'])->name('weather');
+// Route::get('/weather', [WeatherController::class, 'getWeather'])->name('weather');
 Route::get('/weather', [WeatherController::class, 'getWeather'])->name('weather.get');
 
 
