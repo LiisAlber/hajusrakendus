@@ -1,26 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Information</title>
-</head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
-    <div class="container mx-auto px-4">
-        <div class="my-5 p-5 bg-white shadow rounded-lg">
-            <form method="GET" action="{{ route('weather.get') }}" class="mb-4">
-                <input type="text" name="city" placeholder="Enter City Name" class="p-2 border border-gray-300 rounded">
-                <button type="submit" class="p-2 bg-blue-500 text-white rounded">Get Weather</button>
-            </form>
+@extends('layouts.app')
 
-            @if (isset($weatherData))
-            @php
-                date_default_timezone_set('Europe/Tallinn');
-                $sunrise = \Carbon\Carbon::createFromTimestamp($weatherData['sys']['sunrise'], 'UTC');
-                $sunset = \Carbon\Carbon::createFromTimestamp($weatherData['sys']['sunset'], 'UTC');
-                $sunrise->setTimezone('Europe/Tallinn');
-                $sunset->setTimezone('Europe/Tallinn');
-            @endphp
+@section('content')
+<div class="container mx-auto px-4">
+    <div class="my-5 p-5 bg-white shadow rounded-lg">
+        <form method="GET" action="{{ route('weather.get') }}" class="mb-4">
+            <input type="text" name="city" placeholder="Enter City Name" class="p-2 border border-gray-300 rounded">
+            <button type="submit" class="p-2 bg-blue-500 text-white rounded">Get Weather</button>
+        </form>
+
+        @if (isset($weatherData))
+        @php
+            date_default_timezone_set('Europe/Tallinn');
+            $sunrise = \Carbon\Carbon::createFromTimestamp($weatherData['sys']['sunrise'], 'UTC');
+            $sunset = \Carbon\Carbon::createFromTimestamp($weatherData['sys']['sunset'], 'UTC');
+            $sunrise->setTimezone('Europe/Tallinn');
+            $sunset->setTimezone('Europe/Tallinn');
+        @endphp
 
         <div class="my-5 p-5 bg-white shadow rounded-lg">
             <h1 class="text-2xl font-bold text-center text-gray-700 mb-2">Weather in {{ $weatherData['name'] }}</h1>
@@ -46,9 +41,8 @@
             <p class="text-gray-600">Sunset: <span class="font-semibold">{{ $sunset->format('H:i') }}</span></p>
         </div>
         @else
-                <h1 class="text-xl font-bold text-center text-red-500">Please enter a city name.</h1>
-            @endif
-        </div>
+            <h1 class="text-xl font-bold text-center text-red-500">Please enter a city name.</h1>
+        @endif
     </div>
-</body>
-</html>
+</div>
+@endsection
