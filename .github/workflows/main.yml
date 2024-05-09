@@ -26,8 +26,8 @@ jobs:
           echo "STRIPE_KEY=${{ secrets.STRIPE_KEY }}" >> $GITHUB_ENV
           echo "STRIPE_PUBLIC=${{ secrets.STRIPE_PUBLIC }}" >> $GITHUB_ENV
 
-      - name: Deploy
-        uses: deployphp/action@v1
-        with:
-          dep: deploy
-          private-key: ${{ secrets.PRIVATE_KEY }}
+      #- name: Deploy
+      #  uses: deployphp/action@v1
+      #  with:
+      #    dep: deploy
+      #    private-key: ${{ secrets.PRIVATE_KEY }}

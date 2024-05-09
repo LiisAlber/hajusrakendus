@@ -21,7 +21,8 @@
             <h1 class="text-2xl font-bold text-center text-gray-700 mb-2">Weather in {{ $weatherData['name'] }}</h1>
             @if (isset($weatherData['weather'][0]['icon']))
                 <div class="flex justify-center">
-                    <img src="http://openweathermap.org/img/wn/{{ $weatherData['weather'][0]['icon'] }}.png" alt="Weather Icon" class="w-20 h-20">
+                    <img src="https://openweathermap.org/img/wn/{{ $weatherData['weather'][0]['icon'] }}.png" alt="Weather Icon" class="w-20 h-20">
+
                 </div>
             @endif
             <p class="text-gray-600">Temperature: <span class="font-semibold">{{ $weatherData['main']['temp'] }}°C</span></p>
