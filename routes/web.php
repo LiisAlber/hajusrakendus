@@ -9,7 +9,6 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ToolsController;
 use App\Http\Controllers\WeatherController;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
@@ -93,32 +92,31 @@ Route::put('/tools/{tool}', [ToolsController::class, 'update'])->name('tools.upd
 Route::delete('/tools/{tool}', [ToolsController::class, 'destroy'])->name('tools.destroy');
 
 Route::get('show-api', function() {
-    $name = request('name');
-    $cacheKey = 'api_response_' . $name;
-    $cacheTime = 60; // Cache time in minutes
+    $requestUrl = match(request('name')) {
+        'Karel' => 'https://hajusrakendus.ta22maarma.itmajakas.ee/api/records',
+        'Mari-Liis' => 'https://ralf.ta22sink.itmajakas.ee/api/makeup',
+        'Ralf' => 'https://hajus.ta19heinsoo.itmajakas.ee/api/movies',
+        'Jan' => 'https://hajusrakendus.ta22korva.itmajakas.ee/api/shopapis',
+        default => 'https://hajusrakendus.ta22alber.itmajakas.ee/tools'
+    };
 
-    return Cache::remember($cacheKey, $cacheTime, function () use ($name) {
-        $requestUrl = match($name) {
-            'Karel' => 'https://hajusrakendus.ta22maarma.itmajakas.ee/api/records',
-            'Mari-Liis' => 'https://ralf.ta22sink.itmajakas.ee/api/makeup',
-            'Ralf' => 'https://hajus.ta19heinsoo.itmajakas.ee/api/movies',
-            'Jan' => 'https://hajusrakendus.ta22korva.itmajakas.ee/api/shopapis',
-            default => 'https://hajusrakendus.ta22alber.itmajakas.ee/tools'
-        };
+    $response = Http::get($requestUrl)->json();
 
-        $response = Http::get($requestUrl)->json();
+    // Check if the response is an array
+    if (!is_array($response)) {
+        // Handle unexpected response format
+        Log::warning('Unexpected response format from API: ' . $requestUrl);
+        return response()->json(['error' => 'Unexpected response format'], 500);
+    }
 
-        if (!is_array($response)) {
-            Log::warning('Unexpected response format from API: ' . $requestUrl);
-            // Return an empty array or some other meaningful default
-            return ['error' => 'Unexpected response format'];
-        }
+    // Limit the data array based on the 'limit' request parameter
+    $limit = request('limit', 10); // Default to 10 
+    $limitedData = array_slice($response, 0, $limit);
 
-        $limit = request('limit', 10); // Default to 10
-        return array_slice($response, 0, $limit);
-    });
+    return [
+        'data' => $limitedData
+    ];
 });
-
 
 
 require __DIR__.'/auth.php';
