@@ -11,7 +11,7 @@
 
         <a href="{{ route('tools.create') }}" class="btn btn-primary">Add New Tool</a>
         <button class="btn btn-info fetchApiData" data-name="Karel">Karel</button>
-        <button class="btn btn-info fetchApiData" data-name="Mari-Liis">Mari-Liis</button>
+        <button class="btn btn-info fetchApiData" data-name="Jan">Jan</button>
         <div id="apiData" class="mt-3"></div>
 
         <table class="table">
@@ -52,37 +52,43 @@ let lastClicked = null;
 
 document.querySelectorAll('.fetchApiData').forEach(button => {
     button.addEventListener('click', function() {
-        const currentName = this.getAttribute('data-name');
-        
         const container = document.getElementById('apiData');
-        
+        const currentName = this.getAttribute('data-name');
+
         if (lastClicked === currentName && container.style.display !== 'none') {
             container.style.display = 'none';
-            lastClicked = null; 
+            lastClicked = null;
         } else {
-            container.style.display = 'block'; 
-            lastClicked = currentName; 
+            container.style.display = 'block';
+            lastClicked = currentName;
 
             fetch(`{{ url('/show-api') }}?name=` + currentName)
                 .then(response => response.json())
                 .then(data => {
-                    container.innerHTML = '';
-                    data.data.forEach(tool => {
-                        container.innerHTML += `<div>
-                            <h4>${tool.title}</h4>
-                            <p>Brand: ${tool.brand}</p>
-                            <p>Price: ${tool.price}</p>
-                            <img src="${tool.image}" alt="${tool.title} Image" style="width:100px;">
-                        </div>`; 
+                    container.innerHTML = ''; // Clear previous content
+                    data.data.forEach(item => {
+                        let itemContent = '<div style="margin-bottom: 20px;">';
+                        // Handle text data dynamically
+                        Object.keys(item).forEach(key => {
+                            if (key !== 'image' && key !== 'image_path') { // Exclude image from the general key-value pairs
+                                itemContent += `<p><strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${item[key]}</p>`;
+                            }
+                        });
+                        // Determine which image property is available and construct the image URL
+                        const imageUrl = item.image || item.image_path || 'path/to/default/image.jpg'; // Use a default image if none provided
+                        itemContent += `<img src="${imageUrl}" alt="Image of ${item.name || 'Item'}" style="width: 100px; height: auto;">`;
+                        itemContent += '</div>';
+                        container.innerHTML += itemContent;
                     });
                 })
                 .catch(error => {
                     console.error('Error fetching the data:', error);
-                    container.innerHTML = '<p>Error loading data.</p>'; 
+                    container.innerHTML = '<p>Error loading data. Please try again.</p>';
                 });
         }
     });
 });
+
 </script>
 @endsection
 
